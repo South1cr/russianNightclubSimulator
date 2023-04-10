@@ -1,0 +1,22 @@
+body {
+    background: url('../assets/background.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+#menu {
+    background: rgba(0,0,0,.6);
+    padding: 20px;
+}
+
+#canvas {
+    border: 1px solid black;
+}
