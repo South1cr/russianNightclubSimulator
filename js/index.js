@@ -5,6 +5,7 @@ canvas.height = window.innerHeight;
 
 let score = 0;
 let streak = 0;
+let scoreMultiplier = 1;
 let gameOn = false;
 let muted = false;
 let animationInterval;
@@ -122,7 +123,7 @@ function createNote() {
         createNote()
     }, randomSeed*1000)       
     
-}
+}  
 
 function validateNote(note) {
     switch (note.direction) {
@@ -136,14 +137,18 @@ function validateNote(note) {
             return rightArrowIsPressed;
     }
 }
-
+/*
 function updateScore(){
     document.getElementById('score').innerHTML= score;
-}
+}*/
 
 function animationLoop() {
     // clear rect
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // draw combo and score 
+    ctx.fillStyle = '#eef577';
+    ctx.font = '18px sans-serif';
+    ctx.fillText(`Combo: ${scoreMultiplier}  Score: ${score}`, canvas.width/3, 30);
     // draw placeholder arrows
     ctx.drawImage(arrowLeft, leftArrowPos, canvas.height - arrowHeight, leftArrowIsPressed ? 4 + arrowWidth : arrowWidth, leftArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     ctx.drawImage(arrowUp, upArrowPos, canvas.height - arrowHeight, upArrowIsPressed ? 4 + arrowWidth : arrowWidth, upArrowIsPressed ? 4 + arrowHeight : arrowHeight)
@@ -156,16 +161,26 @@ function animationLoop() {
         if (note.y > canvas.height - arrowHeight - inputPadding && note.y < canvas.height - arrowHeight + inputPadding) {
             if (note.validated === false && validateNote(note)) { // start checking 10 pixels before
                 note.validated = true;
-                score += 100;
+                score += 100 * scoreMultiplier;
                 streak +=1;
-                updateScore();
+                if(streak > 20){
+                    scoreMultiplier = 3;
+                } else if(streak > 10){
+                    scoreMultiplier = 2;
+                } else{
+                    scoreMultiplier = 1;
+                }
+                //updateScore();
             }
         }
         if (note.y > canvas.height) { // clear the note
             if (note.validated === false) {
-                score -= 50;
+                if(score > 0){
+                    score -= 50;
+                    //updateScore();
+                }
+                scoreMultiplier = 1;
                 streak = 0;
-                updateScore();
             }
             arr.splice(i, 1);
         }
