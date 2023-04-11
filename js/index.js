@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d')
 canvas.height = window.innerHeight;
 
 let score = 0;
+let streak = 0;
 let gameOn = false;
 let muted = false;
 let animationInterval;
@@ -156,12 +157,14 @@ function animationLoop() {
             if (note.validated === false && validateNote(note)) { // start checking 10 pixels before
                 note.validated = true;
                 score += 100;
+                streak +=1;
                 updateScore();
             }
         }
         if (note.y > canvas.height) { // clear the note
             if (note.validated === false) {
                 score -= 50;
+                streak = 0;
                 updateScore();
             }
             arr.splice(i, 1);
@@ -196,11 +199,6 @@ function startGame() {
 
         createNote();
 
-        /*
-        addNotesInterval = setInterval(() => {
-            createNote();
-        }, 750);*/
-
     } else {
         startButton.innerHTML = `
         <i class="fa-solid fa-play"></i>
@@ -209,26 +207,9 @@ function startGame() {
     }
 
 }
-/*
-function toggleMute() {
-    muted = !muted;
-    const muteButton = document.getElementById("mute");
-    if (muted) {
-        audioElement.pause();
-        muteButton.innerHTML = `
-         <i class="fa-solid fa-volume-high"></i>
-        `
-    } else {
-        audioElement.play();
-        muteButton.innerHTML = `
-         <i class="fa-solid fa-volume-xmark"></i>
-        `
-    }
-}*/
 
 window.onload = function () {
     document.getElementById("start-button").onclick = startGame;
-    //document.getElementById("mute").onclick = toggleMute;
     document.addEventListener("keydown", handleKeyPress);
     document.addEventListener("keyup", handleKeyPress);
 }
