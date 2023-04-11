@@ -3,6 +3,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    font-family: 'Roboto', sans-serif;
 }
 
 #container {
@@ -12,11 +13,50 @@ body {
     align-items: flex-start;
 }
 
-#menu {
-    background: rgba(0,0,0,.6);
+.menu {
+    background: #ca1be3;
     padding: 20px;
+    display: flex;
+    color: white;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 14px;
+    border: 1px dotted #0f0f0f;
+}
+
+.menu > p {
+    font-size: 20px;
+}
+
+.menu > button {
+    background: transparent;
+    color: white;
+    border: 2px dotted rgba(0,0,0,.4);
+    border-radius: 50px;
+}
+
+.menu > button:hover {
+    border-color: #000000;
+}
+
+.menu > button.clicked {
+    background: #000000;
+}
+
+#start-button, #mute {
+    width: 50px;
+    height: 50px;
+}
+
+#mute {
+    margin-top: 4px;
+}
+
+.menu-button-image {
+    width: 25px;
+    height: 25px;
 }
 
 #canvas {
-    border: 1px solid black;
+  /*border: 1px solid #000000;*/
 }
