@@ -38,7 +38,8 @@ arrowLeftDynamic.src = './assets/leftArrowDynamic.png'
 const arrowUpDynamic = new Image();
 arrowUpDynamic.src = "./assets/arrowBlue.gif";
 */
-const notesArray = [];
+const arrowsArray = [];
+const combosArray = [];
 
 const leftArrowPos = 1.5 * (canvas.width / 8);
 const upArrowPos = 2.75 * (canvas.width / 8);
@@ -48,7 +49,7 @@ const rightArrowPos = 5.25 * (canvas.width / 8);
 const arrowWidth = 75;
 const arrowHeight = 75;
 const inputPadding = 15;
-const maxNotes = 12;
+const maxArrows = 12;
 
 function handleKeyPress(e) {
     switch (e.keyCode) {
@@ -67,10 +68,9 @@ function handleKeyPress(e) {
     }
 }
 
-class Note {
+class ArrowSprite {
 
     constructor(direction) {
-
         switch (direction) {
             case 'left':
                 this.x = leftArrowPos;
@@ -100,7 +100,7 @@ class Note {
     }
 
     updatePosition() {
-        this.y += 2;
+        this.y += 1.5;
     }
 
     draw() {
@@ -108,25 +108,47 @@ class Note {
     }
 }
 
-function createNote() {
+function createArrow() {
     if(!gameOn){
         return;
     }
     let directions = ['left', 'up', 'down', 'right'];
-    let noteDirection = directions[Math.floor(Math.random() * directions.length)]
+    let arrowDirection = directions[Math.floor(Math.random() * directions.length)]
     let randomSeed = Math.floor(Math.random() * 2.2)
-    notesArray.push(new Note(noteDirection))
-    if(notesArray.length > maxNotes){
+    arrowsArray.push(new ArrowSprite(arrowDirection))
+    if(arrowsArray.length > maxArrows){
         randomSeed *= 4;
     }
     setTimeout(() => {
-        createNote()
+        createArrow()
     }, randomSeed*1000)       
     
 }  
 
-function validateNote(note) {
-    switch (note.direction) {
+class ComboSprite {
+    constructor(combo, xPos){
+        this.combo = combo;
+        this.x=  xPos + arrowWidth / 2;
+        this.y = canvas.height - arrowHeight;
+    }
+
+    updatePosition(){
+        this.y += .5;
+    }
+
+    draw(){
+        ctx.fillStyle = '#eef577';
+        ctx.font = '18px sans-serif';
+        ctx.fillText(`${this.combo}X`, this.x, this.y);
+    }   
+}
+
+function createCombo(combo, xPos){
+    combosArray.push(new ComboSprite(combo, xPos));
+}
+
+function validateArrow(arrow) {
+    switch (arrow.direction) {
         case 'left':
             return leftArrowIsPressed;
         case 'up':
@@ -148,40 +170,49 @@ function animationLoop() {
     // draw combo and score 
     ctx.fillStyle = '#eef577';
     ctx.font = '18px sans-serif';
-    ctx.fillText(`Combo: ${scoreMultiplier}  Score: ${score}`, canvas.width/3, 30);
+    ctx.fillText(`Combo: ${scoreMultiplier}X  Score: ${score}`, canvas.width/3.1, 30);
     // draw placeholder arrows
     ctx.drawImage(arrowLeft, leftArrowPos, canvas.height - arrowHeight, leftArrowIsPressed ? 4 + arrowWidth : arrowWidth, leftArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     ctx.drawImage(arrowUp, upArrowPos, canvas.height - arrowHeight, upArrowIsPressed ? 4 + arrowWidth : arrowWidth, upArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     ctx.drawImage(arrowDown, downArrowPos, canvas.height - arrowHeight, downArrowIsPressed ? 4 + arrowWidth : arrowWidth, downArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     ctx.drawImage(arrowRight, rightArrowPos, canvas.height - arrowHeight, rightArrowIsPressed ? 4 + arrowWidth : arrowWidth, rightArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     // update and draw moving arrows
-    notesArray.forEach((note, i, arr) => {
-        note.updatePosition();
-        note.draw();
-        if (note.y > canvas.height - arrowHeight - inputPadding && note.y < canvas.height - arrowHeight + inputPadding) {
-            if (note.validated === false && validateNote(note)) { // start checking 10 pixels before
-                note.validated = true;
+    arrowsArray.forEach((arrow, i, arr) => {
+        arrow.updatePosition();
+        arrow.draw();
+        if (arrow.y > canvas.height - arrowHeight - inputPadding && arrow.y < canvas.height - arrowHeight + inputPadding) {
+            if (arrow.validated === false && validateArrow(arrow)) { // start checking 10 pixels before
+                arrow.validated = true;
                 score += 100 * scoreMultiplier;
                 streak +=1;
-                if(streak > 20){
+                if(streak > 10){
+                    createCombo(3, arrow.x)
                     scoreMultiplier = 3;
-                } else if(streak > 10){
+                } else if(streak > 5){
+                    createCombo(2, arrow.x)
                     scoreMultiplier = 2;
                 } else{
                     scoreMultiplier = 1;
                 }
-                //updateScore();
             }
         }
-        if (note.y > canvas.height) { // clear the note
-            if (note.validated === false) {
+        if (arrow.y > canvas.height) { // clear the arrow
+            if (arrow.validated === false) {
                 if(score > 0){
                     score -= 50;
-                    //updateScore();
                 }
                 scoreMultiplier = 1;
                 streak = 0;
             }
+            arr.splice(i, 1);
+        }
+    })
+
+    // handle combo text
+    combosArray.forEach((combo, i, arr) => {
+        combo.updatePosition();
+        combo.draw();
+        if (combo.y > canvas.height) { // clear the arrow
             arr.splice(i, 1);
         }
     })
@@ -210,9 +241,9 @@ function startGame() {
 
         animationInterval = setInterval(() => {
             animationLoop();
-        }, 16);
+        }, 4);
 
-        createNote();
+        createArrow();
 
     } else {
         startButton.innerHTML = `

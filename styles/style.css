@@ -3,7 +3,11 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: 'Roboto', sans-serif;
+}
+
+#title {
+    font-family: 'Tilt Prism';
+    color: #dcff68;
 }
 
 #container {
