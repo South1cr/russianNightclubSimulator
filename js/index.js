@@ -44,15 +44,15 @@ purpleRight.src = './assets/purpleRight.png';
 const arrowsArray = [];
 const combosArray = [];
 
-const leftArrowPos = 1.5 * (canvas.width / 8);
-const upArrowPos = 2.75 * (canvas.width / 8);
-const downArrowPos = 4.0 * (canvas.width / 8);
-const rightArrowPos = 5.25 * (canvas.width / 8);
-
-const arrowWidth = 75;
-const arrowHeight = 75;
+const arrowWidth = 110;
+const arrowHeight = 110;
 const inputPadding = 15;
 const maxArrows = 4;
+
+const leftArrowPos = 0;
+const upArrowPos = 100;
+const downArrowPos = 200;
+const rightArrowPos = 298;
 
 function handleKeyDown(e) {
     if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
@@ -129,9 +129,9 @@ class ArrowSprite {
 
     updatePosition() {
         if(this.validated){
-            this.y += .8;
+            this.y += 1;
         } else {
-            this.y += 1.5;
+            this.y += 2;
         }
     }
 
@@ -169,7 +169,7 @@ class ScoreSprite {
 
     draw(){
         ctx.fillStyle = '#eef577';
-        ctx.font = '18px sans-serif';
+        ctx.font = '28px sans-serif';
         ctx.fillText(`${this.score}`, this.x, this.y);
     }   
 }
@@ -205,8 +205,8 @@ function animationLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // draw combo and score 
     ctx.fillStyle = '#eef577';
-    ctx.font = '18px sans-serif';
-    ctx.fillText(`Combo: ${scoreMultiplier}X  Score: ${score}`, canvas.width/3.2, 30);
+    ctx.font = '26px sans-serif';
+    ctx.fillText(`Combo: ${scoreMultiplier}X  Score: ${score}`, 90, 30);
     // draw placeholder arrows
     ctx.drawImage(arrowLeft, leftArrowPos, canvas.height - arrowHeight * 1.5, leftArrowIsPressed ? 4 + arrowWidth : arrowWidth, leftArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     ctx.drawImage(arrowUp, upArrowPos, canvas.height - arrowHeight * 1.5, upArrowIsPressed ? 4 + arrowWidth : arrowWidth, upArrowIsPressed ? 4 + arrowHeight : arrowHeight)
