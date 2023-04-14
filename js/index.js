@@ -178,10 +178,7 @@ function createScoreSprite(score, xPos){
     combosArray.push(new ScoreSprite(score, xPos));
 }
 
-function decrementScore(arrow){
-    /*if(arrow){
-        createScoreSprite(-100, arrow.x)
-    }*/
+function decrementScore(){
     if(score > 0){
         score -= 100;
     }
@@ -206,7 +203,7 @@ function animationLoop() {
     // draw combo and score 
     ctx.fillStyle = '#eef577';
     ctx.font = '26px sans-serif';
-    ctx.fillText(`Combo: ${scoreMultiplier}X  Score: ${score}`, 90, 30);
+    ctx.fillText(`Combo: ${scoreMultiplier}X  Score: ${score}`, 80, 30);
     // draw placeholder arrows
     ctx.drawImage(arrowLeft, leftArrowPos, canvas.height - arrowHeight * 1.5, leftArrowIsPressed ? 4 + arrowWidth : arrowWidth, leftArrowIsPressed ? 4 + arrowHeight : arrowHeight)
     ctx.drawImage(arrowUp, upArrowPos, canvas.height - arrowHeight * 1.5, upArrowIsPressed ? 4 + arrowWidth : arrowWidth, upArrowIsPressed ? 4 + arrowHeight : arrowHeight)
@@ -233,7 +230,7 @@ function animationLoop() {
         }
         if (arrow.y > canvas.height) { // clear the arrow
             if (arrow.validated === false) {
-                decrementScore(arrow)
+                decrementScore()
                 scoreMultiplier = 1;
                 streak = 0;
             }
