@@ -129,9 +129,9 @@ class ArrowSprite {
 
     updatePosition() {
         if(this.validated){
-            this.y += 1;
+            this.y += 1.5;
         } else {
-            this.y += 2;
+            this.y += 3;
         }
     }
 
